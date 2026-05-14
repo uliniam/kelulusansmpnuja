@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SISTEM KELULUSAN DIGITAL - SMP SWASTA NURUL JADID</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1b5e20;
+            --gold: #d4af37;
+            --dark: #2c3e50;
+            --light-bg: #f4f7f6;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--light-bg);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .main-card {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 25px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 20px;
+        }
+
+        .header-brand {
+            background: var(--primary);
+            padding: 40px 20px;
+            text-align: center;
+            color: white;
+            border-bottom: 5px solid var(--gold);
+        }
+
+        .logo-box {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .logo-box img {
+            height: 70px;
+            filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2));
+        }
+
+        .header-brand h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.5rem;
+            margin: 0;
+            letter-spacing: 2px;
+            line-height: 1.2;
+        }
+
+        .header-brand p {
+            font-size: 0.85rem;
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+
+        .search-area {
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .welcome-text h2 {
+            color: var(--primary);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .welcome-text p {
+            font-size: 0.9rem;
+            color: #777;
+            margin-bottom: 30px;
+        }
+
+        .input-wrapper {
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 100%;
+            padding: 18px;
+            border: 2px solid #eee;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            text-align: center;
+            box-sizing: border-box;
+            transition: 0.3s;
+            font-weight: 600;
+        }
+
+        input:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 10px 20px rgba(27,94,32,0.1);
+        }
+
+        .btn-check {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 18px;
+            border: none;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .btn-check:hover {
+            background: #123e15;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        #resultContainer {
+            display: none;
+            padding: 0 30px 40px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .student-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 20px;
+            padding: 25px;
+            background: #fff;
+            position: relative;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+        }
+
+        .lulus-tag { background: #e8f5e9; color: #2e7d32; border: 1px solid #2e7d32; }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed #eee;
+            font-size: 0.9rem;
+        }
+
+        .data-label { color: #888; text-align: left; }
+        .data-value { font-weight: 600; color: var(--dark); text-align: right; }
+
+        .download-box {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .btn-download {
+            display: block;
+            background: var(--gold);
+            color: white;
+            text-decoration: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        .note-admin {
+            background: #fff9c4;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            color: #827717;
+            text-align: left;
+            margin-top: 20px;
+            line-height: 1.5;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.75rem;
+            color: #999;
+            background: #fafafa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-card">
+    <div class="header-brand">
+        <div class="logo-box">
+            <img src="LOGO NJ png.png" alt="Logo Pondok">
+            <img src="png logo smp.png" alt="Logo SMP">
+        </div>
+        <h1>PENGUMUMAN KELULUSAN</h1>
+        <p>SMP SWASTA NURUL JADID | TA 2025/2026</p>
+    </div>
+
+    <div class="search-area">
+        <div class="welcome-text">
+            <h2>Selamat Datang!</h2>
+            <p>Silakan masukkan NISN Santri untuk melihat status kelulusan dan mengunduh SKL Digital.</p>
+        </div>
+
+        <div class="input-wrapper">
+            <input type="text" id="nisnInput" placeholder="Masukkan 10 Digit NISN...">
+        </div>
+        <button class="btn-check" onclick="prosesCek()">Periksa Hasil</button>
+    </div>
+
+    <div id="resultContainer"></div>
+
+    <footer>
+        &copy; 2026 Panitia Kelulusan - SMP SWASTA NURUL JADID <br>
+        Kec. Singkut, Kab. Sarolangun, Jambi
+    </footer>
+</div>
+
+<script>
+    const database = {
+        "0117130401": { nama: "ARLENA", tempat: "PENINJAUAN", tanggal: "2011-01-28", kelas: "Kelas 9A", status: "BELUM", tagihan: "LUNAS/BELUM LUNAS 3 B", file: "#" },
+        "0117899995": { nama: "ASHFA RIHHADATUL CHUMAIROH", tempat: "Biuku Tanjung", tanggal: "2011-04-15", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0116310546": { nama: "AYU LESTARI", tempat: "Karya Makmur", tanggal: "2011-06-13", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0112422705": { nama: "CHASA APRILI QUEEN", tempat: "LESUNG BATU MUDA", tanggal: "2011-04-04", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0109965953": { nama: "DEWI AULIA", tempat: "Musi Rawas", tanggal: "2010-07-23", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0119670863": { nama: "DILA NUR FITRI", tempat: "BEKASI", tanggal: "2011-09-02", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0117946665": { nama: "DILLA MUSARI", tempat: "MUARA KUIS", tanggal: "2011-07-09", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0118156253": { nama: "FADILAH NURAINI", tempat: "Pelakar Jaya", tanggal: "2011-03-01", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0115483868": { nama: "FAHRINA SALSABILA", tempat: "LUBUK NAPAL", tanggal: "2011-08-12", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0111578405": { nama: "FEBI MAULINDA RIYANTI", tempat: "SAROLANGUN", tanggal: "2011-02-15", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0113760549": { nama: "GEYSHA ROFITA CAHYANI", tempat: "BINGIN RUPIT", tanggal: "2011-07-15", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0119725349": { nama: "HANDAYANI SUBEKTI", tempat: "Musi Rawas", tanggal: "2011-01-03", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114961053": { nama: "HIKMA SALSABILA", tempat: "BT. TINGGI", tanggal: "2011-09-23", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0112955086": { nama: "HUSNA KHOIRU ANNISA", tempat: "MUSI RAWAS", tanggal: "2011-09-28", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "3119845657": { nama: "IDZAA YUNDZIRA", tempat: "SAROLANGUN", tanggal: "2011-10-12", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "3098064568": { nama: "INTAN PELITA SARI", tempat: "BINGIN TELUK", tanggal: "2009-02-02", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0118770532": { nama: "JANNAH NUZAHAH", tempat: "BINGIN TELUK", tanggal: "2011-03-16", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114739689": { nama: "JESICCA PUTRI SALSABILA", tempat: "Merangin", tanggal: "2011-01-29", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0106289264": { nama: "KHUSNUL KORIATIN NASIROH", tempat: "LAMPUNG TENGAH", tanggal: "2010-09-25", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0111941150": { nama: "LAURA CHINTYA UBAIDA", tempat: "MARTA PURA", tanggal: "2011-04-19", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0115416326": { nama: "LULUK ATUS SHOFIA", tempat: "Lubuklinggau", tanggal: "2011-07-29", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0103503033": { nama: "NOVI TRIA NINGSIH", tempat: "Merangin", tanggal: "2010-11-15", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0113929877": { nama: "YASSIRLI AMRINA", tempat: "Merangin", tanggal: "2011-05-29", kelas: "Kelas 9A", status: "BELUM", tagihan: "NAN", file: "#" },
+        "3101239350": { nama: "AFIFA PUCHA AZ ZAHRA", tempat: "BINGIN TELUK", tanggal: "2010-10-04", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0119692392": { nama: "JIHAN PERMATA SARI", tempat: "Bukit Beringin", tanggal: "2011-06-14", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0115851850": { nama: "KAMILA ISMATUN NADIA", tempat: "Sungai Udang", tanggal: "2011-09-09", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0118173622": { nama: "MAWARDAH TUNNISA", tempat: "Sarolangun", tanggal: "2011-10-20", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0108128955": { nama: "NAFA AURELIA", tempat: "PIR TRANS SOSA I A", tanggal: "2010-10-06", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0119629683": { nama: "NAILA AULIYA LAZIMAH", tempat: "Sungai Udang", tanggal: "2011-04-04", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0109793259": { nama: "NAILA MAHARANI", tempat: "Tanah Abang", tanggal: "2010-10-28", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0113318834": { nama: "NAJWA AULIA RAMADHANI", tempat: "Lubuk linggau", tanggal: "2011-06-29", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0115014649": { nama: "NAZWA ANGGUN SYAKILLA", tempat: "LAWANG AGUNG", tanggal: "2011-03-14", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0111937867": { nama: "NINDY AULIA", tempat: "MUARA KUIS", tanggal: "2011-08-07", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0115076723": { nama: "NOLA RUWA ANTIKA", tempat: "BINGIN RUPIT", tanggal: "2011-07-17", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0106830819": { nama: "NURHASANAH", tempat: "Agung Batin", tanggal: "2010-08-02", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0113707605": { nama: "OLIVIA KIA FIANI", tempat: "SAROLANGUN", tanggal: "2011-06-11", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0105347639": { nama: "RAFIQATUZZAHRA", tempat: "BIARO BARU", tanggal: "2010-12-04", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0113181863": { nama: "RAHMA WATI", tempat: "SAROLANGUN", tanggal: "2011-01-12", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114466370": { nama: "REVINA ANGGRAENI", tempat: "MERANGIN", tanggal: "2011-01-01", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0105587678": { nama: "RIFATUL QONITA", tempat: "Singkut", tanggal: "2010-12-26", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0101210640": { nama: "SEPTRIASYA NUR AINI", tempat: "Sarolangun", tanggal: "2010-09-21", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0119659033": { nama: "SHELLA ASRYA SAPUTRI", tempat: "SUMBER KARYA", tanggal: "2011-10-14", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114955280": { nama: "SILVIA RELIFA ATARI", tempat: "SAROLANGUN", tanggal: "2011-01-28", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0119903895": { nama: "SUKMA ZAIRA", tempat: "KARANG MENDAPO", tanggal: "2011-02-01", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0116370834": { nama: "SYAFA TASYA KAMILA KP", tempat: "Merangin", tanggal: "2011-05-20", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0108352860": { nama: "SYASYA AUFA KHAIRANI", tempat: "SAROLANGUN", tanggal: "2010-12-06", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0116270817": { nama: "ZUMARNIS", tempat: "Panti", tanggal: "2011-11-13", kelas: "Kelas 9B", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0119049712": { nama: "AISYA CHAIRUNNISA", tempat: "MUSI RAWAS", tanggal: "2011-03-13", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0128657537": { nama: "ANNISA AZZAHRA", tempat: "Warkuk Ranau Selatan", tanggal: "2012-01-02", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0115122913": { nama: "AUREL SHESILYA AWKHAFI", tempat: "Tanah Abang", tanggal: "2011-03-28", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0117689671": { nama: "BILQIS PUTRI ASYFA", tempat: "Depok", tanggal: "2011-02-22", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0116373507": { nama: "NIDA KHOIRUL FAIZAH", tempat: "TEMUAN SARI", tanggal: "2011-02-05", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114645180": { nama: "NUR ADILA", tempat: "PADANG JERING", tanggal: "2011-02-19", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0107520968": { nama: "RIRIN DUWYH KIRANA", tempat: "BERINGIN MAKMUR I", tanggal: "2010-12-28", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0112688480": { nama: "SALSABIL SALWA", tempat: "Sungai Baung", tanggal: "2011-06-03", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0119526265": { nama: "SALSABILA ALFIANI", tempat: "Sarolangun", tanggal: "2011-09-21", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0118720389": { nama: "SALSHA OKTARIANI", tempat: "RANGGO", tanggal: "2011-10-30", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0105505753": { nama: "SEFTIANY ALEXYA PUTRI", tempat: "TANAH ABANG", tanggal: "2010-08-10", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0119481249": { nama: "SINTA PERMATA SARI", tempat: "BINGIN RUPIT", tanggal: "2011-11-12", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114215835": { nama: "SULIS NUR ASIFAH", tempat: "SAROLANGUN", tanggal: "2011-05-05", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0104614800": { nama: "TAHNI'AH ALFIRA", tempat: "KARANG ANYAR", tanggal: "2010-12-04", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0106643389": { nama: "TIFANI OLIVIA", tempat: "Tanah Abang", tanggal: "2010-08-22", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0106347213": { nama: "TRI WULANDARI", tempat: "SUMBER MAKMUR", tanggal: "2010-09-13", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0118685181": { nama: "VIOLA OKTAVIA", tempat: "BINGIN RUPIT", tanggal: "2011-10-10", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114408008": { nama: "VIOLA SADILLA SYARIF", tempat: "Sarolangun", tanggal: "2011-05-18", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0112746158": { nama: "ZAHRATHUSSITA ISNAINI", tempat: "MUSI RAWAS", tanggal: "2011-06-15", kelas: "Kelas 9C", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0116089960": { nama: "ABDUL LATIF", tempat: "Sarolangun", tanggal: "2011-09-23", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "3118195289": { nama: "ADILAH EMSA PRATAMA", tempat: "SAROLANGUN", tanggal: "2011-06-04", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0117013313": { nama: "ADITYA IRAWAN", tempat: "LUBUK LINGGAU", tanggal: "2011-09-17", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0118167875": { nama: "AHMAD CHAIRUDIN", tempat: "MERANGIN", tanggal: "2011-05-24", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0102813054": { nama: "AHMAD IRSYAD AL FAHREZI", tempat: "Sarolangun", tanggal: "2010-10-14", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0113694444": { nama: "AHMAD MUKMIN", tempat: "MANDIANGIN", tanggal: "2011-06-22", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0129124174": { nama: "AHMAD RIANZA PUTRA", tempat: "Guguk Tinggi", tanggal: "2012-09-03", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "3106316661": { nama: "AKBAR KHAIRUL ADHA", tempat: "Balai Jaya", tanggal: "2010-11-17", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "3106336722": { nama: "ALBAR WILIANSYAH", tempat: "MANDIANGIN", tanggal: "2011-01-17", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114300338": { nama: "ALEXI RIANDO PASHA", tempat: "Sarolangun", tanggal: "2011-01-23", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0112193746": { nama: "ANDIK FIRMANSYAH", tempat: "TANAH ABANG", tanggal: "2011-03-18", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114363242": { nama: "BARRY EL WILDAIN", tempat: "PENINJUAN", tanggal: "2011-04-09", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0117304252": { nama: "DAFFA FATIH ALZAYYAN", tempat: "Sarolangun", tanggal: "2011-11-23", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0109521000": { nama: "DEAS ABDUNAFI", tempat: "Sarolangun", tanggal: "2010-12-06", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114304580": { nama: "DIDI RIADI", tempat: "LAWANG AGUNG", tanggal: "2011-08-01", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114220014": { nama: "FERDY ALRISYAH PUTRA", tempat: "BINGIN RUPIT", tanggal: "2011-07-17", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0101601200": { nama: "FRENGKI ADHA PUTRA", tempat: "Beringin Jaya", tanggal: "2010-11-17", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0104357640": { nama: "HASBULLAH TABRANI", tempat: "Lubuk Bedorong", tanggal: "2010-12-20", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "3100519168": { nama: "MUHAMMAD IQSAN PRATAMA", tempat: "BATURAJA", tanggal: "2010-06-20", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0118785333": { nama: "MUSTRA PRATAMA", tempat: "KAMPUNG BARU", tanggal: "2011-07-21", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "3052250763": { nama: "RESKI", tempat: "PAUH", tanggal: "2008-08-16", kelas: "Kelas 9D", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0104585054": { nama: "ARVIN SURYA PERMANA", tempat: "Perdamaian", tanggal: "2010-12-12", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0111121522": { nama: "HEPTA DWI PRABOWO", tempat: "BIARO BARU", tanggal: "2011-10-27", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0112993425": { nama: "M. ALIF", tempat: "Muara Belengo", tanggal: "2011-04-15", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0113452257": { nama: "M. IHSAN NURRAHIM", tempat: "Lubuklinggau", tanggal: "2011-10-23", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "3118052224": { nama: "M. REFFY", tempat: "SAROLANGUN", tanggal: "2011-06-06", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0118666675": { nama: "M. RIDHO WIBOWO", tempat: "SAROLANGUN", tanggal: "2011-07-12", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0115582119": { nama: "M. THIFAL ALDIANRA", tempat: "SAROLANGUN", tanggal: "2011-06-27", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0116994959": { nama: "MARGA MAULANA DZAKII", tempat: "BENGKULU", tanggal: "2011-01-24", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0118547195": { nama: "MUHAMMAD ARIB ABDILLAH", tempat: "Sarolangun", tanggal: "2011-01-11", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114021783": { nama: "MUHAMMAD BAYHAKI FAHRURROZY", tempat: "LUBUK LINGGAU", tanggal: "2011-05-25", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "3113418907": { nama: "MUHAMMAD FAALIH ABDURROHIM", tempat: "MUSI RAWAS", tanggal: "2011-07-16", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0104333244": { nama: "MUHAMMAD HASAN SIRRUL JALIL", tempat: "Pinang Merah", tanggal: "2010-09-24", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "3112198566": { nama: "MUHAMMAD NUR HABIB", tempat: "MUSI RAWAS", tanggal: "2011-10-04", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114325276": { nama: "MUHAMMAD REZA PRATAMA", tempat: "Pelakar", tanggal: "2011-01-24", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0108272449": { nama: "MUHAMMAD ROFIQUL HAMDI", tempat: "MERANGIN", tanggal: "2010-09-08", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0103830926": { nama: "PAHRUL ULUM", tempat: "MUARA KULAM", tanggal: "2010-11-30", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0115852047": { nama: "QORI ALQOTIRI", tempat: "BATANG HARI", tanggal: "2011-05-10", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0109024387": { nama: "RAHMAD IBNUHAJAR", tempat: "Sarolangun", tanggal: "2010-11-08", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0107894528": { nama: "RAHMAT ARDHI YANSAH", tempat: "PAUH", tanggal: "2010-07-29", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0102419696": { nama: "RAMA OKTARA", tempat: "Sarolangun", tanggal: "2010-10-28", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0115021784": { nama: "SETIO ALQURNI", tempat: "PENINJAUAN", tanggal: "2011-04-04", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0106563616": { nama: "VAHRIZHA ARDHIAN SAPUTRA", tempat: "Rejosari", tanggal: "2010-11-19", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0102242256": { nama: "YOGA WAHID SAPUTRA", tempat: "Pematang Kolim", tanggal: "2010-07-17", kelas: "Kelas 9E", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114701816": { nama: "ALDI SUHARDI", tempat: "PANGKALAN", tanggal: "2011-01-13", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0101930132": { nama: "ALDO RINALDI", tempat: "Peninjauan", tanggal: "2010-12-29", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0116199392": { nama: "BAGAS DZAKKIR RIZQULLAH", tempat: "Sarolangun", tanggal: "2011-02-02", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0111053358": { nama: "DENI AIRLANGGA", tempat: "KELUMPANG JAYA", tanggal: "2011-01-26", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0103932440": { nama: "DENIYS FAJRUL HAKAM", tempat: "SAROLANGUN", tanggal: "2010-12-29", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0094527481": { nama: "EKO SETIAWAN", tempat: "PATI", tanggal: "2009-04-02", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0118777947": { nama: "KHUSNUL MURTADHO", tempat: "Sarolangun", tanggal: "2011-05-18", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0114061320": { nama: "M. FARHAN", tempat: "Temalang", tanggal: "2011-08-06", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "3104255739": { nama: "M. RIZKI TRIKANDA", tempat: "SAROLANGUN", tanggal: "2010-07-10", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0113218047": { nama: "MAHARDIKA IBNU WAHYU", tempat: "Jambi", tanggal: "2011-09-30", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0103307599": { nama: "MOHAMMAD ROHMAIZAR MUSTAFA", tempat: "BUKIT BERINGIN", tanggal: "2010-05-09", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0105463006": { nama: "MUHAMMAD HAIKAL ARIZKY", tempat: "BUKIT BERINGIN", tanggal: "2010-07-29", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0117338487": { nama: "MUHAMMAD KHOIRUL MALIK", tempat: "Perintis", tanggal: "2011-01-26", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0107307461": { nama: "MUHAMMAD SYARIEF HIDAYATULLAH", tempat: "Sarolangun", tanggal: "2010-11-19", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0116478507": { nama: "MUHAMMAD WAHID NAZDARUDIN", tempat: "Sarolangun", tanggal: "2011-07-27", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0106998768": { nama: "NURHISAM AL HAFITZ", tempat: "Sarolangun", tanggal: "2010-12-27", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0106968114": { nama: "RANDI DWI SAPUTRA", tempat: "Sarolangun", tanggal: "2010-01-12", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0108157619": { nama: "RIFAT FADHILLAH FIRZIAN", tempat: "TANAH ABANG", tanggal: "2010-12-05", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0116659889": { nama: "RIZQ AZZHAHIR", tempat: "LANGKAT", tanggal: "2011-07-05", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "3119002703": { nama: "SYIHAB NUR SYA'BANI", tempat: "MUSI RAWAS", tanggal: "2011-07-04", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+        "0113413742": { nama: "VITTO ZULKRIANSYAH", tempat: "REJOSARI", tanggal: "2011-06-02", kelas: "Kelas 9F", status: "BELUM", tagihan: "NAN", file: "#" },
+    };
+
+    function prosesCek() {
+        const nisn = document.getElementById('nisnInput').value;
+        const container = document.getElementById('resultContainer');
+        
+        if(!nisn) { alert("Silakan masukkan NISN!"); return; }
+
+        const data = database[nisn];
+        if(data) {
+            container.style.display = "block";
+            let html = `
+                <div class="student-card">
+                    <div class="status-badge lulus-tag">STATUS: LULUS</div>
+                    <div class="data-row"><span class="data-label">Nama Lengkap</span><span class="data-value">${data.nama}</span></div>
+                    <div class="data-row"><span class="data-label">NISN</span><span class="data-value">${nisn}</span></div>
+                    <div class="data-row"><span class="data-label">Tempat Lahir</span><span class="data-value">${data.tempat}</span></div>
+                    <div class="data-row"><span class="data-label">Tanggal Lahir</span><span class="data-value">${data.tanggal}</span></div>
+                    <div class="data-row"><span class="data-label">Rombel</span><span class="data-value">${data.kelas}</span></div>
+            `;
+
+            if(data.status === "LUNAS") {
+                html += `
+                    <div class="download-box">
+                        <p style="font-size:0.8rem; color:green; margin-bottom:10px;">Selamat! Seluruh syarat administrasi terpenuhi.</p>
+                        <a href="${data.file}" class="btn-download" target="_blank">UNDUH SKL DIGITAL (PDF)</a>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="note-admin">
+                        <b>Informasi Pengunduhan:</b><br>
+                        Selamat atas kelulusannya! Untuk mengunduh SKL Digital, mohon selesaikan kewajiban administratif berikut:<br>
+                        <span style="color:#d32f2f; font-weight:700;">- ${data.tagihan}</span><br><br>
+                        Jika sudah melakukan pembayaran, silakan konfirmasi ke bagian keuangan.
+                    </div>
+                    <a href="https://wa.me/6285378439343?text=Halo%20Admin%2C%20saya%20ingin%20konfirmasi%20pembayaran%20atas%20nama%20${data.nama}" target="_blank" style="display:block; text-align:center; margin-top:15px; color:var(--primary); font-size:0.8rem; font-weight:700; text-decoration:none;">
+                        📩 KONFIRMASI PEMBAYARAN (WA)
+                    </a>
+                `;
+            }
+            html += `</div>`;
+            container.innerHTML = html;
+        } else {
+            alert("Data NISN tidak ditemukan. Pastikan nomor yang dimasukkan benar.");
+        }
+    }
+</script>
+
+</body>
+</html>
