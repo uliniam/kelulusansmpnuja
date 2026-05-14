@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKL ONLINE - SMP NURUL JADID</title>
+    <link rel="icon" type="image/png" href="LOGO NJ png.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #1b5e20; --gold: #d4af37; --dark: #2c3e50; --light-bg: #f4f7f6; }
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(135deg, #e8f5e9 0%, #ffffff 50%, #f1f8e9 100%); margin: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .main-card { width: 100%; max-width: 500px; background: white; border-radius: 25px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.1); margin: 20px; }
+        .header-brand { background: var(--primary); padding: 30px 20px; text-align: center; color: white; border-bottom: 5px solid var(--gold); }
+        .logo-box { display: flex; justify-content: center; gap: 15px; margin-bottom: 10px; }
+        .logo-box img { height: 60px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.2)); }
+        .header-brand h1 { font-family: 'Montserrat', sans-serif; font-size: 1.2rem; margin: 0; letter-spacing: 1px; }
+        .search-area { padding: 30px; text-align: center; }
+        input { width: 100%; padding: 15px; border: 2px solid #eee; border-radius: 12px; font-size: 1rem; text-align: center; box-sizing: border-box; transition: 0.3s; font-weight: 600; margin-bottom: 15px; }
+        input:focus { border-color: var(--primary); outline: none; }
+        .btn-check { width: 100%; background: var(--primary); color: white; padding: 15px; border: none; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-check:hover { background: #123e15; transform: translateY(-2px); }
+        
+        /* CSS ANIMASI LOADING */
+        .loader { border: 5px solid #f3f3f3; border-top: 5px solid var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; margin: 20px auto; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .fade-in-result { animation: fadeIn 0.8s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .student-card { border: 1px solid #e0e0e0; border-radius: 15px; padding: 20px; background: #fff; text-align: left; }
+        .status-badge { display: inline-block; padding: 5px 15px; border-radius: 50px; font-weight: 800; font-size: 0.7rem; margin-bottom: 15px; background: #e8f5e9; color: #2e7d32; border: 1px solid #2e7d32; }
+        .data-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px dashed #eee; font-size: 0.85rem; }
+        .data-label { color: #888; }
+        .data-value { font-weight: 600; color: var(--dark); }
+        .btn-download { display: block; background: var(--gold); color: white; text-decoration: none; padding: 12px; border-radius: 10px; font-weight: 700; text-align: center; margin-top: 20px; }
+        .note-admin { background: #fff9c4; padding: 12px; border-radius: 10px; font-size: 0.75rem; color: #827717; margin-top: 15px; }
+    </style>
+</head>
+<body>
+
+<div class="main-card">
+    <div class="header-brand">
+        <div class="logo-box">
+            <img src="LOGO NJ png.png" alt="Logo Pondok">
+            <img src="png logo smp.png" alt="Logo SMP">
+        </div>
+        <h1>HASIL KELULUSAN DIGITAL</h1>
+    </div>
+
+    <div class="search-area">
+        <input type="text" id="nisnInput" placeholder="Masukkan 10 Digit NISN...">
+        <button class="btn-check" onclick="prosesCek()">Periksa Data</button>
+        <div id="loader" class="loader"></div>
+        <div id="resultContainer" style="display:none; margin-top: 20px;"></div>
+    </div>
+</div>
+
+<script>
+    // DATABASE HASIL UPDATE GOOGLE SHEETS TERBARU
+    const database = {
+        "0117130401": { nama: "ARLENA", tempat: "PENINJAUAN", tanggal: "2011-01-28", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0117899995": { nama: "ASHFA RIHHADATUL CHUMAIROH", tempat: "BIUKU TANJUNG", tanggal: "2011-04-15", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0116310546": { nama: "AYU LESTARI", tempat: "KARYA MAKMUR", tanggal: "2011-06-13", kelas: "Kelas 9A", status: "BELUM", tagihan: "500000", file: "#" },
+        "0112422705": { nama: "CHASA APRILI QUEEN", tempat: "LESUNG BATU MUDA", tanggal: "2011-04-04", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0109965953": { nama: "DEWI AULIA", tempat: "LUBUK LINGGAU", tanggal: "2010-09-26", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0114979148": { nama: "DWI AYU LESTARI", tempat: "BINGIN RUPIT", tanggal: "2011-08-27", kelas: "Kelas 9A", status: "BELUM", tagihan: "800000", file: "#" },
+        "0113110546": { nama: "ELSA AMELIA", tempat: "LUBUK LINGGAU", tanggal: "2011-10-06", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0108342416": { nama: "FEBY ALYA SYAFITRI", tempat: "MUARA KULAM", tanggal: "2010-02-15", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0113887038": { nama: "LIDIA OKTAVIA", tempat: "SANTAN SARI", tanggal: "2011-10-18", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0114885827": { nama: "MIRA SANTIKA", tempat: "BIUKU TANJUNG", tanggal: "2011-12-09", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0117073711": { nama: "NADIA SAFIRA", tempat: "MUARA KULAM", tanggal: "2011-05-18", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0115021743": { nama: "NAILA PUTRI AGUSTIN", tempat: "PENINJAUAN", tanggal: "2011-08-14", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0105342621": { nama: "NAYLA AZAHRA", tempat: "BATURAJA", tanggal: "2010-12-30", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0114061314": { nama: "NAZWA", tempat: "PELAWAN", tanggal: "2011-03-24", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0111756586": { nama: "NUR ALIFAH", tempat: "KARANG ANYAR", tanggal: "2011-01-26", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0108873733": { nama: "NUR ASIYAH", tempat: "SUKOREJO", tanggal: "2010-03-31", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0116812832": { nama: "PUTRI AYU NINGSIH", tempat: "MUARA KULAM", tanggal: "2011-10-22", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0105748286": { nama: "SILVIA NUR AINI", tempat: "LUBUK LINGGAU", tanggal: "2010-09-02", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0108316279": { nama: "SUCI RAMADANI", tempat: "TANAH ABANG", tanggal: "2010-11-20", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0114757344": { nama: "SYIFA AULIA", tempat: "PELAWAN", tanggal: "2011-08-01", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0118685181": { nama: "VIOLA OKTAVIA", tempat: "BINGIN RUPIT", tanggal: "2011-10-10", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0103503033": { nama: "NOVI TRIA NINGSIH", tempat: "MERANGIN", tanggal: "2010-11-15", kelas: "Kelas 9A", status: "LUNAS", tagihan: "", file: "#" },
+        "0111534066": { nama: "ALYA MUKHBITHA", tempat: "LUBUK LINGGAU", tanggal: "2011-11-14", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0116045814": { nama: "AZAHRA MEILANI", tempat: "LUBUK LINGGAU", tanggal: "2011-05-18", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "3115456499": { nama: "AZZAHRA NABILA SYIFA", tempat: "LUBUK LINGGAU", tanggal: "2011-08-30", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0108342415": { nama: "CHINTYA DWI AYU LESTARI", tempat: "MUARA KULAM", tanggal: "2010-06-03", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0115748439": { nama: "DIVA DWI ANGGRAINI", tempat: "LUBUK LINGGAU", tanggal: "2011-12-16", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0119865181": { nama: "ERIKA ANGGRAINI", tempat: "BINGIN RUPIT", tanggal: "2011-03-10", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0118311166": { nama: "HIKMATUL RAMADANI", tempat: "MERANGIN", tanggal: "2011-08-01", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0115309328": { nama: "INTAN DWI RAMADHANI", tempat: "SAROLANGUN", tanggal: "2011-08-21", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0118128456": { nama: "KAYLA REZKI RAMADHANI", tempat: "LUBUK LINGGAU", tanggal: "2011-10-18", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0118131333": { nama: "LATIFA TUNNISA", tempat: "SAROLANGUN", tanggal: "2011-05-18", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0117822765": { nama: "LUTHFIYAH HAFIDZAH", tempat: "JAMBI", tanggal: "2011-02-18", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0105342125": { nama: "NABILAH AZAHRA", tempat: "BATURAJA", tanggal: "2010-01-30", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0112110546": { nama: "NADIRA AMELIA", tempat: "LUBUK LINGGAU", tanggal: "2011-09-06", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0118777344": { nama: "NAZWATUL KAILA", tempat: "SAROLANGUN", tanggal: "2011-08-01", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0112445827": { nama: "NIKEN SANTIKA", tempat: "BIUKU TANJUNG", tanggal: "2011-02-09", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0111756585": { nama: "NUR AISYAH", tempat: "KARANG ANYAR", tanggal: "2011-01-26", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0113110222": { nama: "NURUL HIDAYAH", tempat: "SINGKUT", tanggal: "2011-10-06", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0118128332": { nama: "PUTRI RAMADHANI", tempat: "SAROLANGUN", tanggal: "2011-10-22", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0117822123": { nama: "SALSABILA", tempat: "JAMBI", tanggal: "2011-02-18", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0112422101": { nama: "SHAKIRA APRILI QUEEN", tempat: "SINGKUT", tanggal: "2011-04-04", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0114131333": { nama: "SYAFIRA RAMADHANI", tempat: "SAROLANGUN", tanggal: "2011-10-18", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0116370834": { nama: "SYAFA TASYA KAMILA KP", tempat: "MERANGIN", tanggal: "2011-05-20", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0108352860": { nama: "SYASYA AUFA KHAIRANI", tempat: "SAROLANGUN", tanggal: "2010-12-06", kelas: "Kelas 9B", status: "LUNAS", tagihan: "", file: "#" },
+        "0115021781": { nama: "ADITYA SAPUTRA", tempat: "PENINJAUAN", tanggal: "2011-01-28", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0117899123": { nama: "AHMAD DHANI", tempat: "BIUKU TANJUNG", tanggal: "2011-04-15", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0114422705": { nama: "ANDIKA PRATAMA", tempat: "LESUNG BATU MUDA", tanggal: "2011-04-04", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0113110111": { nama: "ARIF HIDAYAT", tempat: "LUBUK LINGGAU", tanggal: "2011-10-06", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0113887111": { nama: "BAGAS PRATAMA", tempat: "SANTAN SARI", tanggal: "2011-10-18", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0114061444": { nama: "DANI RAMADHAN", tempat: "PELAWAN", tanggal: "2011-03-24", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0111756222": { nama: "FAJAR SIDIK", tempat: "KARANG ANYAR", tanggal: "2011-01-26", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0108873111": { nama: "ILHAM MAULANA", tempat: "SUKOREJO", tanggal: "2010-03-31", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0116812333": { nama: "M. ALIF ALFIAN", tempat: "MUARA KULAM", tanggal: "2011-10-22", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0105342111": { nama: "M. RIZKI PRATAMA", tempat: "BATURAJA", tanggal: "2010-12-30", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0117073111": { nama: "RAFI AHMAD", tempat: "MUARA KULAM", tanggal: "2011-05-18", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0115021111": { nama: "RENDI SAPUTRA", tempat: "PENINJAUAN", tanggal: "2011-08-14", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0105748111": { nama: "RIZAL EFENDI", tempat: "LUBUK LINGGAU", tanggal: "2010-09-02", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0108316111": { nama: "TEGAR PRATAMA", tempat: "TANAH ABANG", tanggal: "2010-11-20", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0114408008": { nama: "VIOLA SADILLA SYARIF", tempat: "SAROLANGUN", tanggal: "2011-05-18", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0114131111": { nama: "ZAKY ALFARIZI", tempat: "SAROLANGUN", tanggal: "2011-10-18", kelas: "Kelas 9C", status: "LUNAS", tagihan: "", file: "#" },
+        "0115021222": { nama: "ADITYA RAMADHAN", tempat: "PENINJAUAN", tanggal: "2011-01-28", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0117899222": { nama: "AHMAD Jaelani", tempat: "BIUKU TANJUNG", tanggal: "2011-04-15", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0114422222": { nama: "ANDI PRATAMA", tempat: "LESUNG BATU MUDA", tanggal: "2011-04-04", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0113110221": { nama: "ARIS HIDAYAT", tempat: "LUBUK LINGGAU", tanggal: "2011-10-06", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0113887222": { nama: "BAGUS PRATAMA", tempat: "SANTAN SARI", tanggal: "2011-10-18", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0114061222": { nama: "DANI RAMADHANI", tempat: "PELAWAN", tanggal: "2011-03-24", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0111756333": { nama: "FAJAR SIDIQ", tempat: "KARANG ANYAR", tanggal: "2011-01-26", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0108873222": { nama: "ILHAM MAULUDI", tempat: "SUKOREJO", tanggal: "2010-03-31", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0116812222": { nama: "M. ALIF ALFARIZI", tempat: "MUARA KULAM", tanggal: "2011-10-22", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0105342222": { nama: "M. RIZKI MAULANA", tempat: "BATURAJA", tanggal: "2010-12-30", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "3115456222": { nama: "MUHAMAD RIZKY", tempat: "BATURAJA", tanggal: "2011-08-30", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "3100519168": { nama: "MUHAMMAD IQSAN PRATAMA", tempat: "BATURAJA", tanggal: "2010-06-20", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0118785333": { nama: "MUSTRA PRATAMA", tempat: "KAMPUNG BARU", tanggal: "2011-07-21", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0117073222": { nama: "RAFFI AHMAD", tempat: "MUARA KULAM", tanggal: "2011-05-18", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0115021223": { nama: "RENDY SAPUTRA", tempat: "PENINJAUAN", tanggal: "2011-08-14", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0105748222": { nama: "RIZAL EFENDY", tempat: "LUBUK LINGGAU", tanggal: "2010-09-02", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0108316222": { nama: "TEGAR ADITYA", tempat: "TANAH ABANG", tanggal: "2010-11-20", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0114131222": { nama: "ZAKY ALFARIZY", tempat: "SAROLANGUN", tanggal: "2011-10-18", kelas: "Kelas 9D", status: "LUNAS", tagihan: "", file: "#" },
+        "0115021333": { nama: "ADITYA PRATAMA", tempat: "PENINJAUAN", tanggal: "2011-01-28", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0117899333": { nama: "AHMAD FAUZI", tempat: "BIUKU TANJUNG", tanggal: "2011-04-15", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0114422333": { nama: "ANDRI PRATAMA", tempat: "LESUNG BATU MUDA", tanggal: "2011-04-04", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0113110333": { nama: "ARIS MAULANA", tempat: "LUBUK LINGGAU", tanggal: "2011-10-06", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0113887333": { nama: "BIMA PRATAMA", tempat: "SANTAN SARI", tanggal: "2011-10-18", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0114061333": { nama: "DANI SAPUTRA", tempat: "PELAWAN", tanggal: "2011-03-24", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0111756444": { nama: "FAJRUL FALAH", tempat: "KARANG ANYAR", tanggal: "2011-01-26", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0108873333": { nama: "ILHAM RAMADHAN", tempat: "SUKOREJO", tanggal: "2010-03-31", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0116812444": { nama: "M. ALIF MAULANA", tempat: "MUARA KULAM", tanggal: "2011-10-22", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0105342333": { nama: "M. RIZKI SAPUTRA", tempat: "BATURAJA", tanggal: "2010-12-30", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0117073333": { nama: "RAFI MAULANA", tempat: "MUARA KULAM", tanggal: "2011-05-18", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0115021334": { nama: "RENDI ADITYA", tempat: "PENINJAUAN", tanggal: "2011-08-14", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0105748333": { nama: "RIZAL MAULANA", tempat: "LUBUK LINGGAU", tanggal: "2010-09-02", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0115021784": { nama: "SETIO ALQURNI", tempat: "PENINJAUAN", tanggal: "2011-04-04", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0108316333": { nama: "TEGAR SAPUTRA", tempat: "TANAH ABANG", tanggal: "2010-11-20", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0114131334": { nama: "ZAKY MAULANA", tempat: "SAROLANGUN", tanggal: "2011-10-18", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0106563616": { nama: "VAHRIZHA ARDHIAN SAPUTRA", tempat: "REJOSARI", tanggal: "2010-11-19", kelas: "Kelas 9E", status: "LUNAS", tagihan: "", file: "#" },
+        "0115021444": { nama: "ADITYA MAULANA", tempat: "PENINJAUAN", tanggal: "2011-01-28", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0117899444": { nama: "AHMAD RAMADHAN", tempat: "BIUKU TANJUNG", tanggal: "2011-04-15", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0114422444": { nama: "ANDRE PRATAMA", tempat: "LESUNG BATU MUDA", tanggal: "2011-04-04", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0113110444": { nama: "ARIF MAULANA", tempat: "LUBUK LINGGAU", tanggal: "2011-10-06", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0113887444": { nama: "BINTANG PRATAMA", tempat: "SANTAN SARI", tanggal: "2011-10-18", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0114061445": { nama: "DANI RAMADHAN", tempat: "PELAWAN", tanggal: "2011-03-24", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0103932440": { nama: "DENIYS FAJRUL HAKAM", tempat: "SAROLANGUN", tanggal: "2010-12-29", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0094527481": { nama: "EKO SETIAWAN", tempat: "PATI", tanggal: "2009-04-02", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0111756555": { nama: "FAJAR RAMADHAN", tempat: "KARANG ANYAR", tanggal: "2011-01-26", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0108873444": { nama: "ILHAM SAPUTRA", tempat: "SUKOREJO", tanggal: "2010-03-31", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0118777947": { nama: "KHUSNUL MURTADHO", tempat: "SAROLANGUN", tanggal: "2011-05-18", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0116812555": { nama: "M. ALIF RAMADHAN", tempat: "MUARA KULAM", tanggal: "2011-10-22", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0114061320": { nama: "M. FARHAN", tempat: "TEMALANG", tanggal: "2011-08-06", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "3104255739": { nama: "M. RIZKI TRIKANDA", tempat: "SAROLANGUN", tanggal: "2010-07-10", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0105342444": { nama: "M. RIZKI MAULUDI", tempat: "BATURAJA", tanggal: "2010-12-30", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0113218047": { nama: "MAHARDIKA IBNU WAHYU", tempat: "JAMBI", tanggal: "2011-09-30", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0117073444": { nama: "RAFI RAMADHAN", tempat: "MUARA KULAM", tanggal: "2011-05-18", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0115021445": { nama: "RENDI MAULANA", tempat: "PENINJAUAN", tanggal: "2011-08-14", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0105748444": { nama: "RIZAL RAMADHAN", tempat: "LUBUK LINGGAU", tanggal: "2010-09-02", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0116659889": { nama: "RIZQ AZZHAHIR", tempat: "LANGKAT", tanggal: "2011-07-05", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0108316444": { nama: "TEGAR MAULANA", tempat: "TANAH ABANG", tanggal: "2010-11-20", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+        "0114131444": { nama: "ZAKY RAMADHAN", tempat: "SAROLANGUN", tanggal: "2011-10-18", kelas: "Kelas 9F", status: "LUNAS", tagihan: "", file: "#" },
+    };
+
+    function prosesCek() {
+        const nisn = document.getElementById('nisnInput').value;
+        const container = document.getElementById('resultContainer');
+        const loader = document.getElementById('loader');
+        
+        if(!nisn) { alert("Silakan masukkan NISN!"); return; }
+
+        container.style.display = "none";
+        loader.style.display = "block";
+
+        setTimeout(() => {
+            loader.style.display = "none";
+            const data = database[nisn];
+            if(data) {
+                container.style.display = "block";
+                container.classList.add('fade-in-result');
+                
+                let html = `
+                    <div class="student-card">
+                        <div class="status-badge">STATUS: LULUS</div>
+                        <div class="data-row"><span class="data-label">Nama</span><span class="data-value">${data.nama}</span></div>
+                        <div class="data-row"><span class="data-label">NISN</span><span class="data-value">${nisn}</span></div>
+                        <div class="data-row"><span class="data-label">Lahir</span><span class="data-value">${data.tempat}, ${data.tanggal}</span></div>
+                        <div class="data-row"><span class="data-label">Kelas</span><span class="data-value">${data.kelas}</span></div>
+                `;
+
+                if(data.status === "LUNAS") {
+                    html += `<a href="${data.file}" class="btn-download" target="_blank">UNDUH SKL DIGITAL</a>`;
+                } else {
+                    html += `
+                        <div class="note-admin">
+                            <b>Administrasi Belum Lengkap:</b><br>
+                            Kewajiban: <span style="color:#d32f2f;">${data.tagihan}</span><br>
+                            Mohon konfirmasi ke Bendahara Sekolah.
+                        </div>
+                    `;
+                }
+                html += `</div>`;
+                container.innerHTML = html;
+            } else {
+                alert("NISN tidak ditemukan!");
+            }
+        }, 1500);
+    }
+</script>
+</body>
+</html>
