@@ -240,13 +240,29 @@
 <script>
     // DATABASE TERUPDATE DARI GOOGLE SHEETS
     const database = {
-        "0117130401": { nama: "ARLENA", tempat: "PENINJAUAN", tanggal: "2011-01-28", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
-        "0116310546": { nama: "AYU LESTARI", tempat: "KARYA MAKMUR", tanggal: "2011-06-13", kelas: "9A", status: "BELUM", tagihan: "Uang Makan Rp 500.000", file: "#" },
-        "0117899995": { nama: "ASHFA RIHHADATUL CHUMAIROH", tempat: "BIUKU TANJUNG", tanggal: "2011-04-15", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
-        "0112422705": { nama: "CHASA APRILI QUEEN", tempat: "LESUNG BATU MUDA", tanggal: "2011-04-04", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
-        "0109965953": { nama: "DEWI AULIA", tempat: "LUBUK LINGGAU", tanggal: "2010-09-26", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
-        // ... (Data siswa lainnya otomatis masuk ke sini)
-    };
+    "0117130401": { nama: "ARLENA", tempat: "PENINJAUAN", tanggal: "2011-01-28", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
+    "0117899995": { nama: "ASHFA RIHHADATUL CHUMAIROH", tempat: "BIUKU TANJUNG", tanggal: "2011-04-15", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
+    "0116310546": { nama: "AYU LESTARI", tempat: "KARYA MAKMUR", tanggal: "2011-06-13", kelas: "9A", status: "BELUM", tagihan: "Rp500.000", file: "#" },
+    "0112422705": { nama: "CHASA APRILI QUEEN", tempat: "LESUNG BATU MUDA", tanggal: "2011-04-04", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
+    "0109965953": { nama: "DEWI AULIA", tempat: "MUSI RAWAS", tanggal: "2010-07-23", kelas: "9A", status: "BELUM", tagihan: "Rp1.000.000", file: "#" },
+    "0119670863": { nama: "DILA NUR FITRI", tempat: "BEKASI", tanggal: "2011-09-02", kelas: "9A", status: "BELUM", tagihan: "Rp500.000", file: "#" },
+    "0117946665": { nama: "DILLA MUSARI", tempat: "MUARA KUIS", tanggal: "2011-07-09", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
+    "0118156253": { nama: "FADILAH NURAINI", tempat: "PELAKAR JAYA", tanggal: "2011-03-01", kelas: "9A", status: "BELUM", tagihan: "Rp500.000", file: "#" },
+    "0115483868": { nama: "FAHRINA SALSABILA", tempat: "LUBUK NAPAL", tanggal: "2011-08-12", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
+    "0111578405": { nama: "FEBI MAULINDA", tempat: "SAROLANGUN", tanggal: "2011-02-15", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
+    "0113760549": { nama: "GEYSHA ROFITA", tempat: "BINGIN RUPIT", tanggal: "2011-07-15", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
+    "0119725349": { nama: "HANDAYANI SUB", tempat: "MUSI RAWAS", tanggal: "2011-01-03", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
+    "0114961053": { nama: "HIKMA SALSABILA", tempat: "BT. TINGGI", tanggal: "2011-09-23", kelas: "9A", status: "BELUM", tagihan: "Rp1.500.000", file: "#" },
+    "0112955086": { nama: "HUSNA KHOIRU", tempat: "MUSI RAWAS", tanggal: "2011-09-28", kelas: "9A", status: "BELUM", tagihan: "Rp500.000", file: "#" },
+    "3119845657": { nama: "IDZAA YUNDZIRA", tempat: "SAROLANGUN", tanggal: "2011-10-12", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
+    "3098064568": { nama: "INTAN PELITA", tempat: "BINGIN TELUK", tanggal: "2009-02-02", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
+    "0118770532": { nama: "JANNAH NUZAHAH", tempat: "BINGIN TELUK", tanggal: "2011-03-16", kelas: "9A", status: "BELUM", tagihan: "Rp500.000", file: "#" },
+    "0114739689": { nama: "JESICCA PUTRI", tempat: "MERANGIN", tanggal: "2011-01-29", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
+    "0106289264": { nama: "KHUSNUL KORIAH", tempat: "LAMPUNG TENGAH", tanggal: "2010-09-25", kelas: "9A", status: "BELUM", tagihan: "Biaya Administrasi", file: "#" },
+    "0111941150": { nama: "LAURA CHINTYA", tempat: "MARTA PURA", tanggal: "2011-04-19", kelas: "9A", status: "LUNAS", tagihan: "", file: "#" },
+    "0115416326": { nama: "LULUK ATUS SH", tempat: "LUBUKLINGGAU", tanggal: "2011-07-29", kelas: "9A", status: "BELUM", tagihan: "Rp500.000", file: "#" },
+    "0103503033": { nama: "NOVI TRIA NINGSIH", tempat: "MERANGIN", tanggal: "2010-11-15", kelas: "9A", status: "BELUM", tagihan: "Rp500.000", file: "#" }
+};
 
     function prosesCek() {
         const nisn = document.getElementById('nisnInput').value;
