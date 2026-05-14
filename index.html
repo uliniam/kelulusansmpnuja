@@ -204,6 +204,33 @@
             color: #999;
             background: #fafafa;
         }
+        /* --- ANIMASI LOADING --- */
+.loader {
+    border: 5px solid #f3f3f3; /* Warna abu-abu muda untuk lingkaran dasar */
+    border-top: 5px solid var(--primary); /* Warna hijau (sesuai tema) untuk bagian yang berputar */
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    animation: spin 1s linear infinite; /* Menjalankan animasi 'spin' terus menerus */
+    margin: 25px auto;
+    display: none; /* Kita sembunyikan dulu, baru muncul saat tombol diklik */
+}
+
+/* Instruksi cara berputarnya */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Efek muncul halus untuk hasil pencarian */
+.fade-in-result {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
     </style>
 </head>
 <body>
@@ -228,7 +255,7 @@
             <input type="text" id="nisnInput" placeholder="Masukkan 10 Digit NISN...">
         </div>
         <button class="btn-check" onclick="prosesCek()">Periksa Hasil</button>
-    </div>
+    <div id="loader" class="loader"></div>
 
     <div id="resultContainer"></div>
 
@@ -374,14 +401,28 @@
     };
 
     function prosesCek() {
-        const nisn = document.getElementById('nisnInput').value;
-        const container = document.getElementById('resultContainer');
-        
-        if(!nisn) { alert("Silakan masukkan NISN!"); return; }
+    const nisn = document.getElementById('nisnInput').value;
+    const container = document.getElementById('resultContainer');
+    const loader = document.getElementById('loader');
+    
+    if(!nisn) { 
+        alert("Silakan masukkan NISN!"); 
+        return; 
+    }
 
+    // 1. Sembunyikan hasil lama dan tampilkan animasi loading
+    container.style.display = "none";
+    loader.style.display = "block";
+
+    // 2. Tunggu 1,5 detik (biar kelihatan mikir)
+    setTimeout(() => {
+        loader.style.display = "none"; // Matikan animasi loading
+        
         const data = database[nisn];
         if(data) {
             container.style.display = "block";
+            container.classList.add('fade-in-result'); // Muncul pelan-pelan
+            
             let html = `
                 <div class="student-card">
                     <div class="status-badge lulus-tag">STATUS: LULUS</div>
@@ -395,7 +436,7 @@
             if(data.status === "LUNAS") {
                 html += `
                     <div class="download-box">
-                        <p style="font-size:0.8rem; color:green; margin-bottom:10px;">Selamat! Seluruh syarat administrasi terpenuhi.</p>
+                        <p style="font-size:0.8rem; color:green; margin-bottom:10px;">Selamat! Syarat administrasi terpenuhi.</p>
                         <a href="${data.file}" class="btn-download" target="_blank">UNDUH SKL DIGITAL (PDF)</a>
                     </div>
                 `;
@@ -415,9 +456,10 @@
             html += `</div>`;
             container.innerHTML = html;
         } else {
-            alert("Data NISN tidak ditemukan. Pastikan nomor yang dimasukkan benar.");
+            alert("Data NISN tidak ditemukan. Pastikan nomor benar.");
         }
-    }
+    }, 1500); // Angka 1500 = 1,5 detik. Bisa kamu ganti kalau mau lebih cepat/lambat.
+}
 </script>
 
 </body>
